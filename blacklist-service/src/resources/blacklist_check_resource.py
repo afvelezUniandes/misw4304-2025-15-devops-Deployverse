@@ -3,9 +3,8 @@ from flask_restful import Resource
 from src.models import BlacklistEntry
 from src.schemas import BlacklistSchema
 from src.database import db
-import os
 
-STATIC_TOKEN = os.getenv("STATIC_TOKEN", "BearerToken123")
+STATIC_TOKEN = "BearerToken123"
 blacklist_schema = BlacklistSchema()
 
 class BlacklistResource(Resource):

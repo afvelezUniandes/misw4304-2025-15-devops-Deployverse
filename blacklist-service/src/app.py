@@ -13,10 +13,10 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    # Configuración de base de datos
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///local.db")
+    # Configuración de base de datos - PostgreSQL RDS
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:postgres@database-blacklist.csn4mkcmaeu1.us-east-1.rds.amazonaws.com:5432/blacklistdb"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "secret123")
+    app.config["JWT_SECRET_KEY"] = "secret123"
 
     # Inicialización
     db.init_app(app)
@@ -39,4 +39,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)

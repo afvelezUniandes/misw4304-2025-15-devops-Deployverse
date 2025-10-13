@@ -10,6 +10,7 @@ Servicio REST para la gestión de listas negras de correos electrónicos. Permit
 - [Instalación](#instalación)
 - [Configuración](#configuración)
 - [Uso](#uso)
+- [Despliegue en AWS Elastic Beanstalk](#despliegue-en-aws-elastic-beanstalk)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Postman Collection](#postman-collection)
@@ -42,6 +43,9 @@ Servicio REST para la gestión de listas negras de correos electrónicos. Permit
 
 ```
 blacklist-service/
+├── .ebextensions/            # Configuración AWS Elastic Beanstalk
+│   ├── flask.config         # Variables de entorno y WSGI
+│   └── db-migrate.config    # Comandos de inicialización BD
 ├── src/
 │   ├── __init__.py
 │   ├── app.py                 # Aplicación principal Flask
@@ -57,9 +61,11 @@ blacklist-service/
 │   ├── test_blacklist_post.py   # Tests endpoint POST
 │   ├── test_error_cases.py      # Tests casos de error
 │   └── test_health.py           # Tests endpoint salud
-├── requirements.txt             # Dependencias Python
-├── runtime.txt                 # Versión Python para despliegue
-├── pytest.ini                 # Configuración pytest
+├── application.py              # Punto de entrada para AWS EB
+├── requirements.txt            # Dependencias Python
+├── runtime.txt                # Versión Python para despliegue
+├── pytest.ini                # Configuración pytest
+├── .ebignore                  # Archivos a ignorar en despliegue
 └── Blacklist_API_Postman_Collection.json
 ```
 
@@ -121,7 +127,7 @@ JWT_SECRET_KEY=secret123
 
 ### Configuración por defecto
 
-- **Puerto**: 5001
+- **Puerto**: 8000
 - **Host**: 0.0.0.0 (todas las interfaces)
 - **Base de datos**: SQLite local (`local.db`)
 - **Token**: `BearerToken123`
@@ -130,27 +136,52 @@ JWT_SECRET_KEY=secret123
 
 ### Ejecutar la aplicación
 
+**Opción 1: Desarrollo local (recomendado)**
+
 ```bash
 # Desde el directorio blacklist-service
 PYTHONPATH=. python src/app.py
 ```
 
-La aplicación estará disponible en: `http://localhost:5001`
+**Opción 2: Usando el punto de entrada de AWS**
+
+```bash
+# Desde el directorio blacklist-service
+PYTHONPATH=. python application.py
+```
+
+La aplicación estará disponible en: `http://localhost:8000`
 
 ### Verificar que funciona
 
 ```bash
-curl http://localhost:5001/health
+curl http://localhost:8000/health
 ```
 
 Respuesta esperada: `{"status": "ok"}`
+
+## 🚀 Despliegue en AWS Elastic Beanstalk
+
+### Archivos de configuración incluidos
+
+1. **`.ebextensions/flask.config`** - Configuración WSGI y variables de entorno
+2. **`.ebextensions/db-migrate.config`** - Inicialización automática de BD
+3. **`application.py`** - Punto de entrada para AWS EB
+4. **`.ebignore`** - Archivos a excluir del despliegue
+
+### Crear archivo ZIP para despliegue
+
+```bash
+cd blacklist-service
+zip -r blacklist-app.zip . -x "*.git*" "__pycache__/*" "*.pyc" ".DS_Store" ".coverage" "test/*" "instance/*"
+```
 
 ## 📡 API Endpoints
 
 ### Base URL
 
 ```
-http://localhost:5001
+http://localhost:8000
 ```
 
 ### Autenticación
