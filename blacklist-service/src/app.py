@@ -14,7 +14,7 @@ def create_app(config=None):
 
     # Configuración por defecto - PostgreSQL RDS
     db_uri = (
-        "postgresql://postgres:postgres@"
+        "postgresql://postgres:uniandes-db-pssw@"
         "database-blacklist.csn4mkcmaeu1.us-east-1.rds.amazonaws.com:5432/"
         "blacklistdb"
     )
@@ -44,7 +44,8 @@ def create_app(config=None):
     return app
 
 
-app = create_app()
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    # Create and run the app only when executed as a script. This avoids
+    # starting the development server during imports (e.g. pytest).
+    _app = create_app()
+    _app.run(host="0.0.0.0", port=8000, debug=True)
