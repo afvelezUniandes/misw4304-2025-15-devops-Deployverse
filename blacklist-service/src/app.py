@@ -15,7 +15,7 @@ def create_app(config=None):
     # Configuración por defecto - PostgreSQL RDS
     db_uri = (
         "postgresql://postgres:uniandes-db-pssw@"
-        "database-blacklist.csn4mkcmaeu1.us-east-1.rds.amazonaws.com:5432/"
+        "blacklistdb.c1i64e8wqk6h.us-east-1.rds.amazonaws.com:5432/"
         "blacklistdb"
     )
     app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
