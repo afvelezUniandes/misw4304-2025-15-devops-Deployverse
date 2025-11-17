@@ -5,37 +5,32 @@ phases:
     runtime-versions:
       python: 3.11
     commands:
-      - echo Installing dependencies for testing...
+      - echo "Installing dependencies..."
       - cd blacklist-service
       - pip install -r requirements.txt
 
   pre_build:
     commands:
-      - echo Running unit tests...
+      - echo "Running unit tests..."
       - pytest -v --cov=src --cov-report=term --cov-report=html
-      - echo Tests completed successfully
-      - echo Logging in to Amazon ECR...
+      - echo "Logging into ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 127214179230.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
+      - echo "Building Docker image..."
       - docker build -t entrega_3_blacklist .
       - docker tag entrega_3_blacklist:latest 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
+      - echo "Pushing image to ECR..."
       - docker push 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
-      - echo Creating deployment artifacts...
+      - echo "Generating imagedefinitions.json..."
       - IMAGE_URI="127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
-      - printf '[ { "name": "blacklist_entrega3", "imageUri": "%s" } ]' "$IMAGE_URI" > imagedefinitions.json
-      - printf '{ "imageDetail": { "imageUri": "%s" } }' "$IMAGE_URI" > imageDetail.json
-      - echo "Generated imagedefinitions.json and imageDetail.json"
-      - echo "imagedefinitions.json contents:" && cat imagedefinitions.json || true
-      - echo "imageDetail.json contents:" && cat imageDetail.json || true
+      - printf '[{"name":"blacklist_entrega3","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
+      - printf '{"imageDetail":{"imageUri":"%s"}}' "$IMAGE_URI" > imageDetail.json
+      - echo "Artifacts generated."
 
 reports:
   pytest_reports:
@@ -45,7 +40,6 @@ reports:
 
 artifacts:
   files:
-    - "**/*"
     - imagedefinitions.json
     - imageDetail.json
   secondary-artifacts:
@@ -56,5 +50,3 @@ artifacts:
     ImageArtifact:
       files:
         - imageDetail.json
-
-  base-directory: blacklist-service
