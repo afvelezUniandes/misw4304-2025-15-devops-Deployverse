@@ -1,5 +1,7 @@
 {
+  "family": "blacklist-entrega3-task",
   "executionRoleArn": "arn:aws:iam::127214179230:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
   "containerDefinitions": [
     {
       "name": "blacklist_entrega3",
@@ -8,7 +10,7 @@
       "portMappings": [
         {
           "containerPort": 5000,
-          "protocol": "tcp"
+          "hostPort": 5000
         }
       ],
       "logConfiguration": {
@@ -18,13 +20,10 @@
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
-      },
-      "environment": []
+      }
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
-  "networkMode": "awsvpc",
-  "cpu": "512",
-  "memory": "1024",
-  "family": "entrega_3_blacklist"
+  "cpu": "1024",
+  "memory": "3072"
 }
