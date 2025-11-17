@@ -34,7 +34,6 @@ phases:
       - printf '[{"name":"blacklist_entrega3","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
       - printf '{"ImageURI":"%s"}' "$IMAGE_URI" > imageDetail.json
       - echo "Artifacts generated."
-      - cat imagedefinitions.json 
 
 reports:
   pytest_reports:
@@ -44,12 +43,6 @@ reports:
 artifacts:
   files:
     - imagedefinitions.json
-    - imageDetail.json
-  secondary-artifacts:
-    DefinitionArtifact:
-      files:
-        - appspec.json
-        - taskdef.json
-    ImageArtifact:
-      files:
-        - imageDetail.json
+    - imageDetail.json 
+    - appspec.json
+    - taskdef.json 
