@@ -8,27 +8,31 @@ phases:
       - echo "Installing dependencies..."
       - cd blacklist-service
       - pip install -r requirements.txt
+      - cd ..
 
   pre_build:
     commands:
       - echo "Running unit tests..."
+      - cd blacklist-service
       - pytest -v --cov=src --cov-report=term --cov-report=html
+      - cd ..
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 127214179230.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
       - echo "Building Docker image..."
-      - docker build -t entrega_3_blacklist .
+      - docker build -t entrega_3_blacklist . 
       - docker tag entrega_3_blacklist:latest 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
 
   post_build:
     commands:
       - echo "Pushing image to ECR..."
       - docker push 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
-      - echo "Generating imagedefinitions.json..."
       - IMAGE_URI="127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
+      - echo "Generating imagedefinitions.json..."
       - printf '[{"name":"blacklist_entrega3","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
+      - echo "Generating imageDetail.json..."
       - printf '{"imageDetail":{"imageUri":"%s"}}' "$IMAGE_URI" > imageDetail.json
       - echo "Artifacts generated."
 
