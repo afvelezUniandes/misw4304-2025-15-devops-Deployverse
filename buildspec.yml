@@ -8,7 +8,6 @@ phases:
       - echo "Installing dependencies..."
       - cd blacklist-service
       - pip install -r requirements.txt
-      - cd ..
 
   pre_build:
     commands:
@@ -29,10 +28,9 @@ phases:
     commands:
       - echo "Pushing image to ECR..."
       - docker push 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
-      - IMAGE_URI="127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
       - echo "Generating imagedefinitions.json..."
+      - IMAGE_URI="127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
       - printf '[{"name":"blacklist_entrega3","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
-      - echo "Generating imageDetail.json..."
       - printf '{"imageDetail":{"imageUri":"%s"}}' "$IMAGE_URI" > imageDetail.json
       - echo "Artifacts generated."
 
@@ -46,11 +44,5 @@ artifacts:
   files:
     - imagedefinitions.json
     - imageDetail.json
-  secondary-artifacts:
-    DefinitionArtifact:
-      files:
-        - appspec.json
-        - taskdef.json
-    ImageArtifact:
-      files:
-        - imageDetail.json
+    - appspec.json
+    - taskdef.json
