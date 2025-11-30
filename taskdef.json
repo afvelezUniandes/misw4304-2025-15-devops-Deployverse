@@ -13,6 +13,14 @@
           "hostPort": 5000
         }
       ],
+      "environment": [
+        { "name": "NEW_RELIC_CONFIG_FILE", "value": "/app/newrelic.ini" },
+        {
+          "name": "NEW_RELIC_LICENSE_KEY",
+          "value": "3bf3db90f3a1a9d6901901d1dc054553FFFFNRAL"
+        },
+        { "name": "NEW_RELIC_APP_NAME", "value": "blacklist_app" }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -20,7 +28,15 @@
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
-      }
+      },
+      "command": [
+        "newrelic-admin",
+        "run-program",
+        "gunicorn",
+        "--config",
+        "gunicorn.conf.py",
+        "application:application"
+      ]
     }
   ],
   "requiresCompatibilities": ["FARGATE"],

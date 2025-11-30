@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el código de la aplicación
 COPY . .
+COPY newrelic.ini /app/newrelic.ini
 
 # Exponer el puerto que usa Gunicorn
 EXPOSE 5000
