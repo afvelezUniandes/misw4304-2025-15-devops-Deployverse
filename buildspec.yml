@@ -17,20 +17,20 @@ phases:
       - pytest -v --cov=src --cov-report=term --cov-report=html
       - cd ..
       - echo "Logging into ECR..."
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 127214179230.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 014487871519.dkr.ecr.us-east-1.amazonaws.com
 
   build:
     commands:
       - echo "Building Docker image..."
       - docker build -t entrega_3_blacklist blacklist-service
-      - docker tag entrega_3_blacklist:latest 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
+      - docker tag entrega_3_blacklist:latest 014487871519.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
 
   post_build:
     commands:
       - echo "Pushing image to ECR..."
-      - docker push 127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
+      - docker push 014487871519.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest
       - echo "Generating artifact files..."
-      - IMAGE_URI="127214179230.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
+      - IMAGE_URI="014487871519.dkr.ecr.us-east-1.amazonaws.com/entrega_3_blacklist:latest"
       - printf '[{"name":"blacklist_entrega3","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
       - printf '{"ImageURI":"%s"}' "$IMAGE_URI" > imageDetail.json
       - echo "Artifacts generated."
@@ -43,6 +43,6 @@ reports:
 artifacts:
   files:
     - imagedefinitions.json
-    - imageDetail.json 
+    - imageDetail.json
     - appspec.json
-    - taskdef.json 
+    - taskdef.json
